@@ -43,3 +43,18 @@ export const getUser = async (req: Request, res: Response) => {
   }
 };
 
+// Delete User by ID
+export const deleteUser = async (req: Request, res: Response) => {
+  try {
+    const userId = req.params.id;
+    const result = await userRepository.delete(userId);
+
+    if (result.affected === 0) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json({ message: 'User deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to delete user' });
+  }
+};
