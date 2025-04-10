@@ -5,6 +5,7 @@ import { User } from '../entity/User';
 
 const userRepository = AppDataSource.getRepository(User);
 
+// Create User
 export const createUser = async (req: Request, res: Response) => {
   try {
     const { name, email } = req.body;
@@ -16,4 +17,29 @@ export const createUser = async (req: Request, res: Response) => {
   }
 };
 
+// Get All Users
+export const getUsers = async (_: Request, res: Response) => {
+  try {
+    const users = await userRepository.find();
+    res.status(200).json(users);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch users' });
+  }
+};
+
+// Get User by ID
+export const getUser = async (req: Request, res: Response) => {
+  try {
+    const userId = parseInt(req.params.id);
+    const user = await userRepository.findOneBy({ id: userId });
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch user' });
+  }
+};
 
